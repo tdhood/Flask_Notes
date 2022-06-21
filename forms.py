@@ -11,3 +11,11 @@ class AddUserForm(FlaskForm):
     email = StringField("Email", validators=[InputRequired(), Email()])
     first_name = StringField("First Name", validators=[InputRequired()])
     last_name = StringField("Last Name", validators=[InputRequired()])
+
+class LoginUserForm(FlaskForm):
+    """ """
+
+    username = StringField("Username", validators=[InputRequired()])
+    password = StringField("Password", validators=[InputRequired()])
+
+class ShowSecret():
