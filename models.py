@@ -3,8 +3,16 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
+
 db = SQLAlchemy()
 bcrypt = Bcrypt()
+
+def connect_db(app):
+    """Connect to database."""
+
+    db.app = app
+    db.init_app(app)
+
 
 class User(db.Model):
     """User."""
@@ -42,7 +50,7 @@ class User(db.Model):
 
 
     @classmethod
-    def login(cls, username, password):
+    def authenticate(cls, username, password):
         """authenticate password"""
 
         user = cls.query.filter_by(username=username).one_or_none()
@@ -51,3 +59,5 @@ class User(db.Model):
             return user
         else:
             return False
+
+
