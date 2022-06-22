@@ -1,6 +1,6 @@
 """Flask app for notes."""
 
-from flask import Flask, request, jsonify, redirect, render_template, flash, session
+from flask import Flask, request, jsonify, redirect, render_template, session
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User
 from forms import AddUserForm, LoginUserForm, CSRFProtectForm
@@ -48,7 +48,9 @@ def show_form_and_handle_create_user():
         db.session.add(user)
         db.session.commit()
 
-        return redirect("/login")
+        session["username"] = user.username
+        return redirect(f"/users/{session['username']}")
+
     else:
         return render_template("user_register.html", form=form)
 
@@ -67,7 +69,7 @@ def show_login_form_and_authenticate_user():
 
         if user:
             session["username"] = user.username
-            return redirect(f"/users/{user.username}")
+            return redirect(f"/users/{session['username']}")
 
         else:
             form.username.errors = ["Bad name/password"]
@@ -79,11 +81,13 @@ def show_login_form_and_authenticate_user():
 def show_secret(username):
     """show secret"""
     # TODO: restricted to user
-    
+
     user = User.query.get_or_404(username)
+
+
     form = CSRFProtectForm()
 
-    return render_template("secret.html", form=form)
+    return render_template("secret.html", user=user, form=form)
 
 
 @app.post("/logout")
