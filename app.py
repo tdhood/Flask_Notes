@@ -48,7 +48,7 @@ def show_form_and_handle_create_user():
         db.session.add(user)
         db.session.commit()
 
-        return redirect("/users/<username>")
+        return redirect("/login")
     else:
         return render_template("user_register.html", form=form)
 
@@ -78,7 +78,8 @@ def show_login_form_and_authenticate_user():
 @app.get("/users/<username>")
 def show_secret(username):
     """show secret"""
-
+    # TODO: restricted to user
+    
     user = User.query.get_or_404(username)
     form = CSRFProtectForm()
 
